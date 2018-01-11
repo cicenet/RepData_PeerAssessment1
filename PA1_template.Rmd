@@ -1,13 +1,12 @@
 ---
 title: "Course Project 1 of Reproducible Research"
 author: "Edgar Alirio Rodridriguez"
-date: "January 8 at 2018"
-output:
-  pdf_document: default
-  html_document:
-    df_print: paged
+date: "January 11 at 2018"
+output: html_document
 ---
-#Course Project 1 of Reproducible Research
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE,fig.show = "asis", fig.keep = "all",cache=TRUE)
+```
 
 ## Introduction
 According to requests for the project assignment of "Reproducible Research" course in this file is condensed the information about: requests, code chunks that resolve these requests and the outcomes of code.
@@ -57,14 +56,20 @@ dfTotalSteps <-dfActivity %>% group_by(date) %>%
 
 ```
 ###2. Histogram of the total number of steps taken each day
-```{r HistogramNumberSteps }
+```{r HistogramNumberSteps  }
 png("figure/Histogram_Total_Steps_Day_With_NO_NA.png")
 hist(dfTotalSteps$TotStepsDay, breaks=10, main="Histogram of the Total Number of Steps Taken Each Day",
       xlab="Total Number of Steps by Day", ylab = "Frequency")
 dev.off()
+#Printing againg Histogram in order to appear in exported file through Knirt
+hist(dfTotalSteps$TotStepsDay, breaks=10, main="Histogram of the Total Number of Steps Taken Each Day",
+      xlab="Total Number of Steps by Day", ylab = "Frequency")
 ```
+
+
 ###3.Report the mean and median of the total number of steps taken per day
 ```{r ReportingMeanMedianSteps }
+#Printing only first ten rows with mean and median steps per day
 head(dfTotalSteps)
 ```
 ##What is the average daily activity pattern?
@@ -115,15 +120,30 @@ plot(x=as.Date(dfActivity$DateTimeInterval),y=dfActivity$MeanStepsInterval, type
      main = "Time Series of the 5-minute interval and Average Number of Steps", 
      xlab="Intervals of 5-minutes during 53 days", ylab="Mean of Steps") 
 dev.off()
+#Printing againg plot in order to appear in exported file through Knirt
+plot(x=as.Date(dfActivity$DateTimeInterval),y=dfActivity$MeanStepsInterval, type = "l", 
+     main = "Time Series of the 5-minute interval and Average Number of Steps", 
+     xlab="Intervals of 5-minutes during 53 days", ylab="Mean of Steps")
 ```
 
 ###2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
-```{r CalculatingMaxNumberSteps}
+At next is printed the 5-minute interval with maximum number of steps
+```{r CalculatingMaxNumberSteps }
 maxSteps<- dfActivity[which.max(dfActivity$steps),]
+print("the 5-minute interval with maximum number of steps is:")
 print(maxSteps)
 ```
 ##Imputing missing values
-Just as mentioned before, the strategy for filling missing values of steps at some intervals is to calculate the mean for each interval among a similar day of the week.
+_I have to write again because previous peer reviewers weren´t able to find the description of Imputing missing values._
+
+According to initial data is a result of monitoring the walking activity of one person during 53 days and data was collected at intervals of five minutes. 
+
+Consequently, this person would have a daily routine that could be different some days from others or even among some periods of the day. For example, at nights, probably there was no data about steps or that person probably could have some exercise routine on some day during week or weekend at certain hours. 
+
+That´s why common sense drives to calculate mean among same intervals from same days.
+
+Just as mentioned before, the strategy for filling missing values of steps at some intervals is to calculate the mean for each interval among similar days of the week.
+
 ###1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 ```{r CalculatingNumberMissingValues }
 CountNA <- nrow(dfActivityOrig[is.na(dfActivityOrig$steps),])
@@ -163,10 +183,14 @@ png("figure/Histogram_Total_Steps_Day_With_Imputed_Values.png")
 hist(dfTotalSteps2$TotStepsDay, breaks=10, main="Histogram of the Total Number of Steps Taken Each Day (including imputed values of missing steps)",
      xlab="Total Number of Steps by Day", ylab = "Frequency")
 dev.off()
+
+#Printing againg histogram in order to appear in exported file through Knirt
+hist(dfTotalSteps2$TotStepsDay, breaks=10, main="Histogram of the Number of Steps Taken Each Day (including imputed values of missing steps)",
+     xlab="Total Number of Steps by Day", ylab = "Frequency")
 ```
 ####Calculate and report the mean and median total number of steps taken per day. 
-```{r REcalculatingMeanFillingValues}
-head(dfTotalSteps2)
+```{r REcalculatingMeanFillingValues }
+print(dfTotalSteps2)
 ```
 ####Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 ```{r Comparation }
@@ -178,7 +202,7 @@ After reviewing the results of data with no "NA" (dfActivity) and data changing 
 
 ##Are there differences in activity patterns between weekdays and weekends?
 ###1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
-```{r ComparationDaysWeek}
+```{r ComparationDaysWeek }
 totalrows<-nrow(dfActPattern)
 TypeDay<-rep("NA",totalrows)
 dfActPattern<-cbind(dfActPattern,TypeDay)
@@ -219,5 +243,10 @@ plotStepsTypeDay<- qplot(DateTimeInterval,MeanStepsTypeDay, data=dfMeanStepsType
                          xlab = "Days", ylab = "Mean Steps by Interval", geom=c("line")) 
 print(plotStepsTypeDay)
 dev.off()
+
+#Printing againg plot in order to appear in exported file through Knirt
+print(plotStepsTypeDay)
+
+
 ```
 
